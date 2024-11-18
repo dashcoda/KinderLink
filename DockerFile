@@ -1,0 +1,18 @@
+# 使用するベースイメージ
+FROM python:3.12-slim
+
+# 作業ディレクトリを作成
+WORKDIR /app
+
+# Poetryのインストール
+RUN pip install poetry
+
+# プロジェクトの依存関係をインストール
+COPY pyproject.toml poetry.lock /app/
+RUN poetry install --no-dev
+
+# アプリケーションコードをコピー
+COPY . /app/
+
+# UvicornでFastAPIを起動
+CMD ["poetry", "run", "uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8000"]
